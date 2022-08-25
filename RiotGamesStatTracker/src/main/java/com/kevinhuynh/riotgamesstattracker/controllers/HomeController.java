@@ -1,7 +1,7 @@
 package com.kevinhuynh.riotgamesstattracker.controllers;
 
 import java.util.ArrayList;
-import java.util.Map;
+import java.util.HashMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -18,7 +18,7 @@ public class HomeController {
 	
 	private Summoner currentSummoner;
 	private String[] matchHistory;
-	private Map<String, String> matchData;
+	private HashMap<String, HashMap<String, Object>> matchData;
 	
 	@Autowired 
 	private SummonerService summonerService;
@@ -45,8 +45,7 @@ public class HomeController {
 		currentSummoner = fullSummoner;
 		matchHistory = summonerService.getMatchList(fullSummoner.getPuuid());
 		matchData = summonerService.getMatchData("NA1_4415485841");
+		System.out.println(matchData.keySet());
 		return "redirect:/dashboard";
 	}
-	
-	
 }

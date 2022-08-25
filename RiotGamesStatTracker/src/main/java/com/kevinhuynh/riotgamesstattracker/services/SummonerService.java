@@ -1,8 +1,10 @@
 package com.kevinhuynh.riotgamesstattracker.services;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,7 +19,7 @@ public class SummonerService {
 	@Autowired
 	private SummonerRepository summonerRepository;
 	
-	private final String API_KEY = "RGAPI-f157dee6-1299-4ec2-a123-17ca7ae69d5c";
+	private final String API_KEY = "RGAPI-47eb4380-62cc-4095-8a7e-0bdf7898caf4";
 	private final String GET_SUMMONER_DATA_API_CALL = "https://na1.api.riotgames.com/lol/summoner/v4/summoners/by-name/";
 	private final String GET_MATCH_HISTORY_API_CALL = "https://americas.api.riotgames.com/lol/match/v5/matches/by-puuid/";
 	private final String GET_MATCH_DATA_API_CALL = "https://americas.api.riotgames.com/lol/match/v5/matches/";
@@ -61,19 +63,33 @@ public class SummonerService {
 		return match;
 	}
 	
-	public Map<String, String> getMatchData(String matchId) {
+	public HashMap<String, HashMap<String, Object>> getMatchData(String matchId) {
 		String url = GET_MATCH_DATA_API_CALL+ matchId + "?api_key=" + API_KEY;
-		System.out.println(url);
-		ArrayList<Object> matchData = new ArrayList<Object>();
 		RestTemplate restTemplate = new RestTemplate();
-		Map<String, String> result = restTemplate.getForObject(url, Map.class);
-//		String jsonString = result;
-//		JSONObject obj = new JSONObject(jsonString);
-//		String jsonString = result;
-//		JSONObject obj = new JSONObject(jsonString);
-		System.out.println(result);
 		
-		return result;
+		Map<String, String> result = restTemplate.getForObject(url, Map.class);
+		JSONObject obj = new JSONObject(result);
+		
+		JSONArray arr = obj.getJSONObject("info").getJSONArray("participants");
+
+		HashMap<String, HashMap<String, Object>> allSummoners = new HashMap<String, HashMap<String, Object>>();
+		for (int i = 0; i < arr.length(); i++) {
+			HashMap<String, Object> matchData = new HashMap<String, Object>();
+			JSONObject currentSummoner = arr.getJSONObject(i);
+			matchData.put("summonerLevel", currentSummoner.getInt("summonerLevel"));
+			matchData.put("championName", currentSummoner.getString("championName"));
+			matchData.put("individualPosition", currentSummoner.getString("individualPosition"));
+			matchData.put("kills", currentSummoner.getInt("kills"));
+			matchData.put("deaths", currentSummoner.getInt("deaths"));
+			matchData.put("assists", currentSummoner.getInt("assists"));
+			matchData.put("teamId", currentSummoner.getInt("teamId"));
+
+			allSummoners.put(arr.getJSONObject(i).getString("summonerName"), matchData);
+		}
+
+		return allSummoners;
 	}
+
+
 	
 }

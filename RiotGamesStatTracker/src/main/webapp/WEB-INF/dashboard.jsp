@@ -56,7 +56,16 @@
 			  			<td><c:out value="${match}"/></td>		
 		  			</tr>
 			  	</c:forEach>
-			  	<c:out value="${matchData}"/>
+				<c:forEach var="currentSummoner" items="${matchData}">
+
+					<!-- <p><c:out value="${currentSummoner}"/></p> -->
+					<c:out value="${currentSummoner.key}"/>
+					<p><c:out value="${matchData.get(currentSummoner.key).get('championName')}"/></p>
+					<p>score: <c:out value="${matchData.get(currentSummoner.key).get('kills')}"/>/<c:out value="${matchData.get(currentSummoner.key).get('deaths')}"/>/<c:out value="${matchData.get(currentSummoner.key).get('assists')}"/></p>
+					<p><c:out value="${matchData.get(currentSummoner.key).get('individualPosition')}"/></p>
+					
+				</c:forEach>
+				
 			  </tbody>
 			</table>
 		</div>

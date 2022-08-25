@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-RiotGamesStatTrackerApplication<riotgamesstattracker>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.kevinhuynh.riotgamesstattracker.RiotGamesStatTrackerApplication",
+            "projectName": "riotgamesstattracker",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}
