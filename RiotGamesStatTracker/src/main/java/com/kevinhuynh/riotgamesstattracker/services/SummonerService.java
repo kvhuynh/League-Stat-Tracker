@@ -19,13 +19,14 @@ public class SummonerService {
 	@Autowired
 	private SummonerRepository summonerRepository;
 	
-	private final String API_KEY = "RGAPI-47eb4380-62cc-4095-8a7e-0bdf7898caf4";
+	private final String API_KEY = "RGAPI-8cec5d81-ffc3-44c3-88df-5f085d9ca11a";
 	private final String GET_SUMMONER_DATA_API_CALL = "https://na1.api.riotgames.com/lol/summoner/v4/summoners/by-name/";
 	private final String GET_MATCH_HISTORY_API_CALL = "https://americas.api.riotgames.com/lol/match/v5/matches/by-puuid/";
 	private final String GET_MATCH_DATA_API_CALL = "https://americas.api.riotgames.com/lol/match/v5/matches/";
 	
 	public ArrayList<Object> getSummonerData(String summonerName) {
 		String url = GET_SUMMONER_DATA_API_CALL + summonerName + "?api_key=" + API_KEY;
+		System.out.println(url);
 		ArrayList<Object> summonerData = new ArrayList<Object>();
 		RestTemplate restTemplate = new RestTemplate();
 		String result = restTemplate.getForObject(url, String.class);
@@ -56,7 +57,6 @@ public class SummonerService {
 	}
 	
 	public String[] getMatchList(String puuid) {
-//		ArrayList<String> matchHistory = new ArrayList<String>();
 		String url = GET_MATCH_HISTORY_API_CALL + puuid + "/ids?start=0&count=20&api_key=" + API_KEY;
 		RestTemplate restTemplate = new RestTemplate();
 		String[] match = restTemplate.getForObject(url, String[].class);
@@ -73,20 +73,43 @@ public class SummonerService {
 		JSONArray arr = obj.getJSONObject("info").getJSONArray("participants");
 
 		HashMap<String, HashMap<String, Object>> allSummoners = new HashMap<String, HashMap<String, Object>>();
+
+		HashMap<String, Object> blueTeam = new HashMap<String, Object>();
+		HashMap<String, Object> redTeam = new HashMap<String, Object>();
+		
+
 		for (int i = 0; i < arr.length(); i++) {
-			HashMap<String, Object> matchData = new HashMap<String, Object>();
 			JSONObject currentSummoner = arr.getJSONObject(i);
-			matchData.put("summonerLevel", currentSummoner.getInt("summonerLevel"));
-			matchData.put("championName", currentSummoner.getString("championName"));
-			matchData.put("individualPosition", currentSummoner.getString("individualPosition"));
-			matchData.put("kills", currentSummoner.getInt("kills"));
-			matchData.put("deaths", currentSummoner.getInt("deaths"));
-			matchData.put("assists", currentSummoner.getInt("assists"));
-			matchData.put("teamId", currentSummoner.getInt("teamId"));
+			HashMap<String, Object> individualSummoner = new HashMap<String, Object>();
+			if (currentSummoner.getInt("teamId") == 100) {
+				individualSummoner.put("summonerLevel", currentSummoner.getInt("summonerLevel"));
+				individualSummoner.put("championName", currentSummoner.getString("championName"));
+				individualSummoner.put("individualPosition", currentSummoner.getString("individualPosition"));
+				individualSummoner.put("kills", currentSummoner.getInt("kills"));
+				individualSummoner.put("deaths", currentSummoner.getInt("deaths"));
+				individualSummoner.put("assists", currentSummoner.getInt("assists"));
+				individualSummoner.put("teamId", currentSummoner.getInt("teamId"));
+				individualSummoner.put("summonerName", currentSummoner.getString("summonerName"));
+				blueTeam.put(arr.getJSONObject(i).getString("summonerName"), individualSummoner);
+			} else {
+				individualSummoner.put("summonerLevel", currentSummoner.getInt("summonerLevel"));
+				individualSummoner.put("championName", currentSummoner.getString("championName"));
+				individualSummoner.put("individualPosition", currentSummoner.getString("individualPosition"));
+				individualSummoner.put("kills", currentSummoner.getInt("kills"));
+				individualSummoner.put("deaths", currentSummoner.getInt("deaths"));
+				individualSummoner.put("assists", currentSummoner.getInt("assists"));
+				individualSummoner.put("teamId", currentSummoner.getInt("teamId"));
+				individualSummoner.put("summonerName", currentSummoner.getString("summonerName"));
+				redTeam.put(arr.getJSONObject(i).getString("summonerName"), individualSummoner);
 
-			allSummoners.put(arr.getJSONObject(i).getString("summonerName"), matchData);
+			}
 		}
-
+		allSummoners.put("blueTeam", blueTeam);
+		allSummoners.put("redTeam", redTeam);
+		// System.out.println(blueTeam);
+		// System.out.println("********************************");
+		// System.out.println(redTeam);
+		// System.out.println(allSummoners);
 		return allSummoners;
 	}
 

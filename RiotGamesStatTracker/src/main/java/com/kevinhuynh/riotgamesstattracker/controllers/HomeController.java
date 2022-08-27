@@ -19,6 +19,8 @@ public class HomeController {
 	private Summoner currentSummoner;
 	private String[] matchHistory;
 	private HashMap<String, HashMap<String, Object>> matchData;
+	private HashMap<String, Object> blueTeam;
+	private HashMap<String, Object> redTeam;
 	
 	@Autowired 
 	private SummonerService summonerService;
@@ -33,7 +35,16 @@ public class HomeController {
 	public String dashboard(Model model) {
 		model.addAttribute("summonerData", currentSummoner);
 		model.addAttribute("matchHistory", matchHistory);
-		model.addAttribute("matchData", matchData);
+		model.addAttribute("blueTeam", blueTeam);
+		model.addAttribute("redTeam", redTeam);
+
+			System.out.println("*************");
+			for (String summoner : blueTeam.keySet()) {
+				System.out.println(blueTeam.get(summoner).getClass().getName());
+				// System.out.println(blueTeam.get(summoner)); 	
+			}
+		
+		// System.out.println(matchData.get("blueTeam").get("Mebbies"));
 		return "dashboard.jsp";
 	}
 	
@@ -45,6 +56,13 @@ public class HomeController {
 		currentSummoner = fullSummoner;
 		matchHistory = summonerService.getMatchList(fullSummoner.getPuuid());
 		matchData = summonerService.getMatchData("NA1_4415485841");
+		blueTeam = matchData.get("blueTeam");
+		redTeam = matchData.get("redTeam");
+
+
+		System.out.println(blueTeam);
+		System.out.println("***************");
+		System.out.println(redTeam);
 		System.out.println(matchData.keySet());
 		return "redirect:/dashboard";
 	}

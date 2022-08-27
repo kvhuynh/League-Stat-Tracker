@@ -30,6 +30,26 @@
 					<a href="/books/new">+ Add a book to my shelf</a>
 				</div>
 			</div>
+			<div class="match d-flex">
+				<div class="container">
+					<c:forEach var="key" items="${blueTeam.keySet()}">
+						<p style="color:blue;"><c:out value="${blueTeam.get(key).get('summonerName')}"/></p>
+						<p style="color:blue;"><c:out value="${blueTeam.get(key).get('championName')}"/></p>
+						 <p style="color:blue;"><c:out value="${blueTeam.get(key).get('kills')}"/>/<c:out value="${blueTeam.get(key).get('deaths')}"/>/<c:out value="${blueTeam.get(key).get('assists')}"/></p>
+						 <p style="color:blue;"><c:out value="${blueTeam.get(key).get('individualPosition')}"/></p>
+						</c:forEach>
+				</div>
+	
+				<div class="container">
+					<c:forEach var="key" items="${redTeam.keySet()}">
+						<p style="color:red;"><c:out value="${redTeam.get(key).get('summonerName')}"/></p>
+						<p style="color:red;"><c:out value="${redTeam.get(key).get('championName')}"/></p>
+						 <p style="color:red;"><c:out value="${redTeam.get(key).get('kills')}"/>/<c:out value="${redTeam.get(key).get('deaths')}"/>/<c:out value="${redTeam.get(key).get('assists')}"/></p>
+						<p style="color:red;"><c:out value="${redTeam.get(key).get('individualPosition')}"/></p>
+					</c:forEach>
+				</div>
+			</div>
+
 			<table class="table table-bordered">
 			  <thead class="table-dark">
 			    <tr>
@@ -56,16 +76,6 @@
 			  			<td><c:out value="${match}"/></td>		
 		  			</tr>
 			  	</c:forEach>
-				<c:forEach var="currentSummoner" items="${matchData}">
-
-					<!-- <p><c:out value="${currentSummoner}"/></p> -->
-					<c:out value="${currentSummoner.key}"/>
-					<p><c:out value="${matchData.get(currentSummoner.key).get('championName')}"/></p>
-					<p>score: <c:out value="${matchData.get(currentSummoner.key).get('kills')}"/>/<c:out value="${matchData.get(currentSummoner.key).get('deaths')}"/>/<c:out value="${matchData.get(currentSummoner.key).get('assists')}"/></p>
-					<p><c:out value="${matchData.get(currentSummoner.key).get('individualPosition')}"/></p>
-					
-				</c:forEach>
-				
 			  </tbody>
 			</table>
 		</div>
